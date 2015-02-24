@@ -107,7 +107,7 @@ class CsvBench
         $this->terminal->output("<green>CSV Benchmark</green>");
         $this->terminal->output("Runtime: <yellow>".PHP_VERSION."</yellow>");
         $this->terminal->output("Host: <yellow>".php_uname()."</yellow>");
-        $this->terminal->output("Nb Package tested: <yellow>$nb_tests</yellow>");
+        $this->terminal->output("Nb Package tested: <yellow>".count($this->collection)."</yellow>");
         $this->terminal->output("CSV document output: <yellow>{$this->file}</yellow>");
         $this->terminal->output("Rows to be inserted/read: <yellow>{$this->nbrows}</yellow>");
         $this->terminal->output("Cells to be inserted/read: <yellow>".($this->nbrows*3)."</yellow>");
