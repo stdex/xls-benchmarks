@@ -20,7 +20,7 @@ use SplFileObject;
  * @package csv-benchmarks
  * @since  0.1.0
  */
-class NativeSplFileObject implements Driver
+class NativeSplFileObject extends AbstractDriver implements Driver
 {
     /**
      * {@inheritdoc}
@@ -51,7 +51,7 @@ class NativeSplFileObject implements Driver
     public function runWriter($file, $nbrows)
     {
         $csv = new SplFileObject($file, 'w');
-        foreach (generateRawData($nbrows) as $row) {
+        foreach ($this->generateRawData($nbrows) as $row) {
             $csv->fputcsv($row);
         }
 

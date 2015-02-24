@@ -20,7 +20,7 @@ use Keboola\Csv\CsvFile;
  * @package csv-benchmarks
  * @since  0.1.0
  */
-class Keboola implements Driver
+class Keboola extends AbstractDriver implements Driver
 {
     /**
      * {@inheritdoc}
@@ -51,7 +51,7 @@ class Keboola implements Driver
     public function runWriter($file, $nbrows)
     {
         $csv = new CsvFile($file);
-        foreach (generateRawData($nbrows) as $row) {
+        foreach ($this->generateRawData($nbrows) as $row) {
             $csv->writeRow($row);
         }
         $csv = null;

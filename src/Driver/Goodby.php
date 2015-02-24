@@ -24,7 +24,7 @@ use Goodby\CSV\Export\Standard\ExporterConfig;
  * @package csv-benchmarks
  * @since  0.1.0
  */
-class Goodby implements Driver
+class Goodby extends AbstractDriver implements Driver
 {
     /**
      * {@inheritdoc}
@@ -56,7 +56,7 @@ class Goodby implements Driver
     public function runWriter($file, $nbrows)
     {
         $exporter = new Exporter(new ExporterConfig());
-        $exporter->export($file, generateRawData($nbrows));
+        $exporter->export($file, $this->generateRawData($nbrows));
         $exporter = null;
 
         return $nbrows;

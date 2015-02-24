@@ -18,7 +18,7 @@ namespace CsvBenchmarks\Driver;
  * @package csv-benchmarks
  * @since  0.1.0
  */
-class NativeFunctions implements Driver
+class NativeFunctions extends AbstractDriver implements Driver
 {
     /**
      * {@inheritdoc}
@@ -49,7 +49,7 @@ class NativeFunctions implements Driver
     public function runWriter($file, $nbrows)
     {
         $csv = fopen($file, 'w');
-        foreach (generateRawData($nbrows) as $row) {
+        foreach ($this->generateRawData($nbrows) as $row) {
             fputcsv($csv, $row);
         }
         fclose($csv);

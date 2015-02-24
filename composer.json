@@ -12,7 +12,6 @@
         }
     ],
     "autoload": {
-        "files" : ["src/functions.php"],
         "psr-4" : {
             "CsvBenchmarks\\" : "src"
         }

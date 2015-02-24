@@ -21,7 +21,7 @@ use EasyCSV\Writer;
  * @package csv-benchmarks
  * @since  0.1.0
  */
-class EasyCsv implements Driver
+class EasyCsv extends AbstractDriver implements Driver
 {
     /**
      * {@inheritdoc}
@@ -52,7 +52,7 @@ class EasyCsv implements Driver
     public function runWriter($file, $nbrows)
     {
         $csv = new Writer($file, 'w');
-        foreach (generateRawData($nbrows) as $row) {
+        foreach ($this->generateRawData($nbrows) as $row) {
             $csv->writeRow($row);
         }
         $csv = null;

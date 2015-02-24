@@ -22,7 +22,7 @@ use Box\Spout\Writer\WriterFactory;
  * @package csv-benchmarks
  * @since  0.1.0
  */
-class Spout implements Driver
+class Spout extends AbstractDriver implements Driver
 {
     /**
      * {@inheritdoc}
@@ -56,7 +56,7 @@ class Spout implements Driver
     {
         $csv = WriterFactory::create(Type::CSV);
         $csv->openToFile($file);
-        foreach (generateRawData($nbrows) as $row) {
+        foreach ($this->generateRawData($nbrows) as $row) {
             $csv->addRow($row);
         }
         $csv->close();

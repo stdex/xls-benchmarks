@@ -21,7 +21,7 @@ use League\Csv\Writer;
  * @package csv-benchmarks
  * @since  0.1.0
  */
-class League implements Driver
+class League extends AbstractDriver implements Driver
 {
     /**
      * {@inheritdoc}
@@ -51,7 +51,7 @@ class League implements Driver
     public function runWriter($file, $nbrows)
     {
         $csv = Writer::createFromPath($file, 'w');
-        foreach (generateRawData($nbrows) as $row) {
+        foreach ($this->generateRawData($nbrows) as $row) {
             $csv->insertOne($row);
         }
 
