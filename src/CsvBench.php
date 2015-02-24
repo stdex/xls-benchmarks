@@ -73,8 +73,6 @@ class CsvBench
         $package  = $driver->getName();
 
         //writer test
-        $this->progress->current($this->key, $driver->getName().' Writer Test');
-        ++$this->key;
         $start    = microtime(true);
         $nbrows   = $driver->runWriter($this->file, $this->nbrows);
         $duration = microtime(true) - $start;
@@ -87,8 +85,6 @@ class CsvBench
         ];
 
         //reader test
-        $this->progress->current($this->key, $driver->getName().' Reader Test');
-        ++$this->key;
         $start    = microtime(true);
         $nbrows   = $driver->runReader($this->file);
         $duration = microtime(true) - $start;
@@ -107,7 +103,7 @@ class CsvBench
         $this->terminal->output("<green>CSV Benchmark</green>");
         $this->terminal->output("Runtime: <yellow>".PHP_VERSION."</yellow>");
         $this->terminal->output("Host: <yellow>".php_uname()."</yellow>");
-        $this->terminal->output("Nb Package tested: <yellow>".count($this->collection)."</yellow>");
+        $this->terminal->output("Packages tested: <yellow>".count($this->collection)."</yellow>");
         $this->terminal->output("CSV document output: <yellow>{$this->file}</yellow>");
         $this->terminal->output("Rows to be inserted/read: <yellow>{$this->nbrows}</yellow>");
         $this->terminal->output("Cells to be inserted/read: <yellow>".($this->nbrows*3)."</yellow>");
@@ -119,8 +115,6 @@ class CsvBench
             '<green>Duration (MS)</green>',
             '<green>NB Rows</green>',
         ]];
-        $this->progress = $this->terminal->progress()->total($nb_tests);
-        $this->key = 0;
         foreach ($this->collection as $driver) {
             $this->benchmarkPackage($driver, $table);
         }

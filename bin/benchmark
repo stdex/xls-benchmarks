@@ -42,10 +42,11 @@ $args = getopt('', ["rows::", "file::", "help"]);
 if (isset($args['help'])) {
     $terminal->output($summary.$options);
     die(0);
-}
-
-if (! isset($args['rows'])) {
-    $args['rows'] = 0;
+} elseif (! isset($args['rows'])) {
+    $terminal->error("The number of row the write and read is missing");
+    $terminal->output('');
+    $terminal->output($summary.$options);
+    die(52);
 }
 
 $outputfile = dirname(__DIR__).'/output/result.csv';

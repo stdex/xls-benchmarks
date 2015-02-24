@@ -2,6 +2,7 @@
     "name" : "nyamsprod/csv-benchmarks",
     "description" : "benchmark to compare famous PHP CSV parsing libraries out of the box",
     "license" : "MIT",
+    "homepage" : "https://github.com/nyamsprod/csv-benchmarks",
     "authors" : [
         {
             "name" : "Ignace Nyamagana Butera",
