@@ -3,14 +3,16 @@
 
 use CsvBenchmarks\CsvBench;
 use CsvBenchmarks\Driver;
+use League\CLImate\CLImate;
 
-define("BASE_DIR", dirname(__DIR__));
+$base_dir = dirname(__DIR__);
 
-require BASE_DIR.'/vendor/autoload.php';
+require $base_dir.'/vendor/autoload.php';
 
-$outputfile = BASE_DIR.'/output/result.csv';
-$terminal   = new League\CLImate\CLImate();
-$drivers    = new Driver\DriverCollection(BASE_DIR.'/composer.lock');
+$outputfile = $base_dir.'/output/result.csv';
+$terminal   = new CLImate();
+$drivers    = new Driver\DriverCollection($base_dir.'/composer.lock');
+$benchmark  = new CsvBench($drivers, $terminal);
 $drivers->add(new Driver\NativeFunctions());
 $drivers->add(new Driver\NativeSplFileObject());
 $drivers->add(new Driver\Spout());
@@ -18,6 +20,8 @@ $drivers->add(new Driver\EasyCsv());
 $drivers->add(new Driver\Goodby());
 $drivers->add(new Driver\Keboola());
 $drivers->add(new Driver\League());
+
+//DON'T EDIT BELOW!!
 
 $summary = <<<EOF
 <green>CSV Benchmark</green>
@@ -49,12 +53,10 @@ if (isset($args['help'])) {
     die(52);
 }
 
-$outputfile = dirname(__DIR__).'/output/result.csv';
 if (isset($args['file'])) {
     $outputfile = trim($args['file']);
 }
 
-$benchmark = new CsvBench($drivers, $terminal);
 $benchmark->setOutputFile($outputfile);
 $benchmark->setNbWritingRows($args['rows']);
 $benchmark();
