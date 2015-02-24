@@ -10,5 +10,5 @@ before_script:
     - travis_retry composer install --no-interaction --prefer-source --dev
 
 script:
-    - php bin/benchmark  --rows=100
+    - php bin/benchmark --rows=100
     - php bin/benchmark

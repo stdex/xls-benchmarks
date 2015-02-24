@@ -1,8 +1,7 @@
 CSV Benchmarks (PHP)
 ==========
 
-All CSV packages are managed by composer (minimum-stability=stable). Tested with the latest stable version
-
+All CSV packages are managed by composer. Tested with the latest stable version
 
 Tested packages
 -------
@@ -11,13 +10,13 @@ Tested packages
 - [goodby/csv](https://github.com/goodby/csv) [![Latest Version](https://img.shields.io/github/release/goodby/csv.svg?style=flat-square)](https://github.com/goodby/csv/releases)
 - [jwage/easy-csv](https://github.com/jwage/easy-csv) [![Latest Version](https://img.shields.io/github/release/jwage/easy-csv.svg?style=flat-square)](https://github.com/jwage/easy-csv/releases)
 - [league/csv](https://github.com/thephpleague/csv) [![Latest Version](https://img.shields.io/github/release/thephpleague/csv.svg?style=flat-square)](https://github.com/thephpleague/csv/releases)
-- [keboola/csv](https://github.com/kebookla/php-csv) [![Latest Version](https://img.shields.io/github/release/keboola/csv.svg?style=flat-square)](https://github.com/keboola/php-csv/releases)
+- [keboola/csv](https://github.com/keboola/php-csv) [![Latest Version](https://poser.pugx.org/keboola/csv/v/stable.svg)](https://github.com/keboola/php-csv/releases)
 
 Adding a new package
 ----
 
-- Clone this repo;
-- Update the composer.json with the submitted package
+- Clone this repo
+- Update the `composer.json` with the submitted package
 - Add a new class in the `src/Driver` directory that implements the `Driver` Interface
 - Update the benchmark script by adding your new benchmark
 - Test and submit your added package through pull request

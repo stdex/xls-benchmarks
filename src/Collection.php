@@ -77,6 +77,10 @@ class Collection
     private function benchmarkPackage(Driver $driver, array &$results)
     {
         $package  = $driver->getName();
+
+        //writer test
+        $this->progress->current($this->key, $driver->getName().' Writer Test');
+        ++$this->key;
         $start    = microtime(true);
         $nbrows   = $driver->runWriter($this->file, $this->nbrows);
         $duration = microtime(true) - $start;
@@ -88,6 +92,9 @@ class Collection
             $nbrows,
         ];
 
+        //reader test
+        $this->progress->current($this->key, $driver->getName().' Reader Test');
+        ++$this->key;
         $start    = microtime(true);
         $nbrows   = $driver->runReader($this->file);
         $duration = microtime(true) - $start;
@@ -102,13 +109,14 @@ class Collection
 
     public function __invoke()
     {
-        $nb_tests = count($this->benchmarks);
+        $nb_tests = count($this->benchmarks)*2 - 1;
         $this->terminal->output("<green>CSV Benchmark</green>");
         $this->terminal->output("Runtime: <yellow>".PHP_VERSION."</yellow>");
         $this->terminal->output("Host: <yellow>".php_uname()."</yellow>");
         $this->terminal->output("Nb Package tested: <yellow>$nb_tests</yellow>");
         $this->terminal->output("CSV document output: <yellow>{$this->file}</yellow>");
-        $this->terminal->output("Nb Rows to be inserted/read: <yellow>{$this->nbrows}</yellow>");
+        $this->terminal->output("Rows to be inserted/read: <yellow>{$this->nbrows}</yellow>");
+        $this->terminal->output("Cells to be inserted/read: <yellow>".($this->nbrows*3)."</yellow>");
         $this->terminal->output("");
         $table = [[
             '<green>Package</green>',
@@ -117,12 +125,10 @@ class Collection
             '<green>Duration (MS)</green>',
             '<green>NB Rows</green>',
         ]];
-        $progress = $this->terminal->progress()->total($nb_tests - 1);
-        $key = 0;
+        $this->progress = $this->terminal->progress()->total($nb_tests);
+        $this->key = 0;
         foreach ($this->benchmarks as $driver) {
             $this->benchmarkPackage($driver, $table);
-            $progress->current($key, $driver->getName());
-            ++$key;
         }
         $this->terminal->table($table);
     }

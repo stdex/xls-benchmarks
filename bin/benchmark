@@ -16,22 +16,22 @@ $packages = $benchmark->getPackageList();
 
 $summary = <<<EOF
 <green>CSV Benchmark</green>
+    Test writing and reading capabilities from different PHP CSV packages.
 
 <yellow>Summary:</yellow>
-    Test writing and reading capabilities from different PHP CSV packages.
-    The following packages are currenlty tested:
+    Packages currently tested:
 
 EOF;
 
 foreach ($packages as $name => $data) {
-    $summary .= "       - $name v{$data['version']} ({$data['homepage']})".PHP_EOL;
+    $summary .= "       - <green>$name</green> <cyan>v{$data['version']}</cyan> ({$data['homepage']})".PHP_EOL;
 }
 
 $options = <<<EOF
 <yellow>Options:</yellow>
     <green>--help</green>    Display this help message
-    <green>--rows</green>    Numbers of rows to create (default: 200000 rows. Each row contain 3 cells
-    <green>--file</green>    File to read from OR to write to (default: $outputfile)
+    <green>--rows</green>    Numbers of rows to create (default: <yellow>200000</yellow> rows. Each row contains 3 cells)
+    <green>--file</green>    File to read from OR to write to (default: <yellow>$outputfile</yellow>)
 EOF;
 
 $args = getopt('', ["rows::", "file::", "help"]);
