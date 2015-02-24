@@ -1,0 +1,64 @@
+#!/usr/bin/env php
+<?php
+
+use CsvBenchmarks\Collection;
+use CsvBenchmarks\Driver;
+
+define("BASE_DIR", dirname(__DIR__));
+
+require BASE_DIR.'/vendor/autoload.php';
+
+$outputfile = BASE_DIR.'/output/result.csv';
+$terminal  = new League\CLImate\CLImate();
+$benchmark = new Collection($terminal);
+$benchmark->registerPackageList(BASE_DIR.'/composer.lock');
+$packages = $benchmark->getPackageList();
+
+$summary = <<<EOF
+<green>CSV Benchmark</green>
+
+<yellow>Summary:</yellow>
+    Test writing and reading capabilities from different PHP CSV packages.
+    The following packages are currenlty tested:
+
+EOF;
+
+foreach ($packages as $name => $data) {
+    $summary .= "       - $name v{$data['version']} ({$data['homepage']})".PHP_EOL;
+}
+
+$options = <<<EOF
+<yellow>Options:</yellow>
+    <green>--help</green>    Display this help message
+    <green>--rows</green>    Numbers of rows to create (default: 200000 rows. Each row contain 3 cells
+    <green>--file</green>    File to read from OR to write to (default: $outputfile)
+EOF;
+
+$args = getopt('', ["rows::", "file::", "help"]);
+if (isset($args['help'])) {
+    $terminal->output($summary.$options);
+    die(0);
+}
+
+if (! isset($args['rows'])) {
+    $args['rows'] = 0;
+}
+$nbrows = filter_var($args['rows'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'default' => 200000]]);
+
+$outputfile = dirname(__DIR__).'/output/result.csv';
+if (isset($args['file'])) {
+    $outputfile = $args['file'];
+}
+
+$benchmark->setOutputFile($outputfile);
+$benchmark->setNbWritingRows($nbrows);
+$benchmark->addBenchmark(new Driver\NativeFunctions());
+$benchmark->addBenchmark(new Driver\NativeSplFileObject());
+$benchmark->addBenchmark(new Driver\Spout());
+$benchmark->addBenchmark(new Driver\EasyCsv());
+$benchmark->addBenchmark(new Driver\Goodby());
+$benchmark->addBenchmark(new Driver\Keboola());
+$benchmark->addBenchmark(new Driver\League());
+
+$benchmark();
+die(0);

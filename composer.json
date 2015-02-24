@@ -1,0 +1,28 @@
+{
+    "name" : "nyamsprod/csv-benchmarks",
+    "description" : "benchmark to compare famous PHP CSV parsing libraries out of the box",
+    "license" : "MIT",
+    "authors" : [
+        {
+            "name" : "Ignace Nyamagana Butera",
+            "email" : "nyamsprod@gmail.com",
+            "homepage": "https://github.com/nyamsprod",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "files" : ["src/functions.php"],
+        "psr-4" : {
+            "CsvBenchmarks\\" : "src"
+        }
+    },
+    "require": {
+        "php": ">=5.5.0",
+        "box/spout": "~1.0",
+        "goodby/csv": "~1.2",
+        "jwage/easy-csv": "0.0.2.*",
+        "league/csv": "~7.0",
+        "keboola/csv": "~1.1",
+        "league/climate": "~2.6"
+    }
+}
