@@ -11,4 +11,4 @@ before_script:
 
 script:
     - php bin/benchmark --rows=100
-    - php bin/benchmark
+    - php bin/benchmark --rows=200000
