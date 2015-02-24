@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use CsvBenchmarks\Collection;
+use CsvBenchmarks\CsvBench;
 use CsvBenchmarks\Driver;
 
 define("BASE_DIR", dirname(__DIR__));
@@ -9,10 +9,15 @@ define("BASE_DIR", dirname(__DIR__));
 require BASE_DIR.'/vendor/autoload.php';
 
 $outputfile = BASE_DIR.'/output/result.csv';
-$terminal  = new League\CLImate\CLImate();
-$benchmark = new Collection($terminal);
-$benchmark->registerPackageList(BASE_DIR.'/composer.lock');
-$packages = $benchmark->getPackageList();
+$terminal = new League\CLImate\CLImate();
+$drivers = new Driver\DriverCollection(BASE_DIR.'/composer.lock');
+$drivers->add(new Driver\NativeFunctions());
+$drivers->add(new Driver\NativeSplFileObject());
+$drivers->add(new Driver\Spout());
+$drivers->add(new Driver\EasyCsv());
+$drivers->add(new Driver\Goodby());
+$drivers->add(new Driver\Keboola());
+$drivers->add(new Driver\League());
 
 $summary = <<<EOF
 <green>CSV Benchmark</green>
@@ -23,7 +28,7 @@ $summary = <<<EOF
 
 EOF;
 
-foreach ($packages as $name => $data) {
+foreach ($drivers->getPackageList() as $name => $data) {
     $summary .= "       - <green>$name</green> <cyan>v{$data['version']}</cyan> ({$data['homepage']})".PHP_EOL;
 }
 
@@ -43,22 +48,14 @@ if (isset($args['help'])) {
 if (! isset($args['rows'])) {
     $args['rows'] = 0;
 }
-$nbrows = filter_var($args['rows'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'default' => 200000]]);
 
 $outputfile = dirname(__DIR__).'/output/result.csv';
 if (isset($args['file'])) {
-    $outputfile = $args['file'];
+    $outputfile = trim($args['file']);
 }
 
+$benchmark = new CsvBench($drivers, $terminal);
 $benchmark->setOutputFile($outputfile);
-$benchmark->setNbWritingRows($nbrows);
-$benchmark->addBenchmark(new Driver\NativeFunctions());
-$benchmark->addBenchmark(new Driver\NativeSplFileObject());
-$benchmark->addBenchmark(new Driver\Spout());
-$benchmark->addBenchmark(new Driver\EasyCsv());
-$benchmark->addBenchmark(new Driver\Goodby());
-$benchmark->addBenchmark(new Driver\Keboola());
-$benchmark->addBenchmark(new Driver\League());
-
+$benchmark->setNbWritingRows($args['rows']);
 $benchmark();
 die(0);
