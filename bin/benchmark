@@ -9,8 +9,8 @@ define("BASE_DIR", dirname(__DIR__));
 require BASE_DIR.'/vendor/autoload.php';
 
 $outputfile = BASE_DIR.'/output/result.csv';
-$terminal = new League\CLImate\CLImate();
-$drivers = new Driver\DriverCollection(BASE_DIR.'/composer.lock');
+$terminal   = new League\CLImate\CLImate();
+$drivers    = new Driver\DriverCollection(BASE_DIR.'/composer.lock');
 $drivers->add(new Driver\NativeFunctions());
 $drivers->add(new Driver\NativeSplFileObject());
 $drivers->add(new Driver\Spout());
@@ -21,10 +21,9 @@ $drivers->add(new Driver\League());
 
 $summary = <<<EOF
 <green>CSV Benchmark</green>
-    Test writing and reading capabilities from different PHP CSV packages.
+    Test writing and reading capabilities from different PHP CSV packages. With out of the box settings when applicable
 
-<yellow>Summary:</yellow>
-    Packages currently tested:
+<yellow>Packages tested:</yellow>
 
 EOF;
 

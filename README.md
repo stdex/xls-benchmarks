@@ -15,10 +15,23 @@ Tested packages
 Adding a new package
 ----
 
+- Make sure your csv package is available on [packagist](https://packagist.org) first
 - Clone this repo
 - Update the `composer.json` with the submitted package
-- Add a new class in the `src/Driver` directory that implements the `Driver` Interface
-- Update the benchmark script by adding your new benchmark
+
+```php
+$ composer require "myawesome/csv-package"
+```
+
+- Add a new class in the `src/Driver`, for instance `MyAwesomeCsvPackage` directory that implements the `Driver` Interface.  
+You can copy/paste an existing Driver to see how it works. Remember that the `getName` method **must** return the package name as registered with packagist. in your case it will be `myawesome/csv-package`.
+
+- Update the benchmark script by adding your new driver.
+
+```php
+$drivers->add(new Driver\MyAwesomeCsvPackage());
+```
+
 - Test and submit your added package through pull request
 
 Contributing
