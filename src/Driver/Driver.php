@@ -21,6 +21,48 @@ namespace CsvBenchmarks\Driver;
 interface Driver
 {
     /**
+     * Set the cells number per row to be inserted when writing to the CSV document
+     *
+     * @param int $nbcells
+     */
+    public function setCellCount($nbcells);
+
+    /**
+     * Get the cells count per row
+     *
+     * @return int
+     */
+    public function getCellCount();
+
+    /**
+     * Set the rows count to be inserted when writing to the CSV document
+     *
+     * @param int $nbrows
+     */
+    public function setRowCount($nbrows);
+
+    /**
+     * Get row count per CSV document
+     *
+     * @return int
+     */
+    public function getRowCount();
+
+    /**
+     * Set CSV document path to read from or write to
+     *
+     * @param string $path
+     */
+    public function setPath($path);
+
+    /**
+     * return current CSV document path
+     *
+     * @return string
+     */
+    public function getPath();
+
+    /**
      * Return the Package Name
      *
      * @return string
@@ -29,18 +71,13 @@ interface Driver
 
     /**
      * Reader test
-     * @param  string $file the file path to read from
      *
      * @return int  the number of lines read
      */
-    public function runReader($file);
+    public function runReader();
 
     /**
      * Writer test
-     * @param  string $file    the file path to write to
-     * @param  int    $nbrows the number of rows to insert
-     *
-     * @return int  the actual number of lines inserted
      */
-    public function runWriter($file, $nbrows);
+    public function runWriter();
 }

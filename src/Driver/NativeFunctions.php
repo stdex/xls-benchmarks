@@ -23,18 +23,15 @@ class NativeFunctions extends AbstractDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return "fopen";
-    }
+    protected $package_name = "filesystem functions";
 
     /**
      * {@inheritdoc}
      */
-    public function runReader($file)
+    public function runReader()
     {
         $nbrows = 0;
-        $csv = fopen($file, 'r');
+        $csv = fopen($this->path, 'r');
         while (false !== ($data = fgetcsv($csv))) {
             ++$nbrows;
         }
@@ -46,14 +43,14 @@ class NativeFunctions extends AbstractDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function runWriter($file, $nbrows)
+    public function runWriter()
     {
-        $csv = fopen($file, 'w');
-        foreach ($this->generateRawData($nbrows) as $row) {
+        $csv = fopen($this->path, 'w');
+        foreach ($this->generateRawData() as $row) {
             fputcsv($csv, $row);
         }
         fclose($csv);
 
-        return $nbrows;
+        return $this->nbrows;
     }
 }

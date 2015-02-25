@@ -9,10 +9,10 @@ $base_dir = dirname(__DIR__);
 
 require $base_dir.'/vendor/autoload.php';
 
-$outputfile = $base_dir.'/output/result.csv';
-$terminal   = new CLImate();
-$drivers    = new Driver\DriverCollection($base_dir.'/composer.lock');
-$benchmark  = new CsvBench($drivers, $terminal);
+$path      = $base_dir.'/output/result.csv';
+$terminal  = new CLImate();
+$drivers   = new Driver\DriverCollection($base_dir.'/composer.lock');
+$benchmark = new CsvBench($drivers, $terminal);
 $drivers->add(new Driver\NativeFunctions());
 $drivers->add(new Driver\NativeSplFileObject());
 $drivers->add(new Driver\Spout());
@@ -32,32 +32,46 @@ $summary = <<<EOF
 EOF;
 
 foreach ($drivers->getPackageList() as $name => $data) {
-    $summary .= "       - <green>$name</green> <cyan>v{$data['version']}</cyan> ({$data['homepage']})".PHP_EOL;
+    $summary .= "       - <green>$name</green> (<yellow>v{$data['version']}</yellow>) (<cyan>{$data['homepage']}</cyan>)".PHP_EOL;
 }
 
 $options = <<<EOF
 <yellow>Options:</yellow>
-    <green>--help</green>    Display this help message
-    <green>--rows</green>    Numbers of rows to create (default: <yellow>200000</yellow> rows. Each row contains 3 cells)
-    <green>--file</green>    File to read from OR to write to (default: <yellow>$outputfile</yellow>)
+    <green>--help</green>         Display this help message
+    <green>--rows</green>         Numbers of rows to create
+    <green>--cells</green>        Numbers of cells per row to create (default: <yellow>3</yellow>)
+    <green>--path</green>         Path to the file to read from OR to write to (default: <yellow>$path</yellow>)
+    <green>--iteration</green>    Numbers of iteration for each test (default: <yellow>3</yellow>)
 EOF;
 
-$args = getopt('', ["rows::", "file::", "help"]);
-if (isset($args['help'])) {
+$args = getopt('', ["rows::", "cells::", "path::", "iteration::", "help", ]);
+if (! $args || isset($args['help'])) {
     $terminal->output($summary.$options);
     die(0);
 } elseif (! isset($args['rows'])) {
-    $terminal->error("The number of row the write and read is missing");
+    $terminal->error("The number of row the write is missing");
     $terminal->output('');
     $terminal->output($summary.$options);
     die(52);
 }
 
-if (isset($args['file'])) {
-    $outputfile = trim($args['file']);
+if (isset($args['path'])) {
+    $path = trim($args['path']);
 }
 
-$benchmark->setOutputFile($outputfile);
-$benchmark->setNbWritingRows($args['rows']);
+$iteration = 3;
+if (isset($args['iteration'])) {
+    $iteration = $args['iteration'];
+}
+
+$nbcells = 3;
+if (isset($args['cells'])) {
+    $nbcells = $args['cells'];
+}
+
+$benchmark->setPath($path);
+$benchmark->setRowCount($args['rows']);
+$benchmark->setCellCount($nbcells);
+$benchmark->setIterationCount($iteration);
 $benchmark();
 die(0);

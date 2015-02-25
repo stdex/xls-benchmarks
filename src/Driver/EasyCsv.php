@@ -26,22 +26,18 @@ class EasyCsv extends AbstractDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return "jwage/easy-csv";
-    }
+    protected $package_name = "jwage/easy-csv";
 
     /**
      * {@inheritdoc}
      */
-    public function runReader($file)
+    public function runReader()
     {
         $nbrows = 0;
-        $csv = new Reader($file, 'r+', false);
+        $csv = new Reader($this->path, 'r+', false);
         while ($row = $csv->getRow()) {
-            ++$nbrows;
+            $nbrows++;
         }
-        $csv = null;
 
         return $nbrows;
     }
@@ -49,14 +45,13 @@ class EasyCsv extends AbstractDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function runWriter($file, $nbrows)
+    public function runWriter()
     {
-        $csv = new Writer($file, 'w');
-        foreach ($this->generateRawData($nbrows) as $row) {
+        $csv = new Writer($this->path, 'w');
+        foreach ($this->generateRawData() as $row) {
             $csv->writeRow($row);
         }
-        $csv = null;
 
-        return $nbrows;
+        return $this->nbrows;
     }
 }

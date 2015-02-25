@@ -39,62 +39,108 @@ class CsvBench
     private $collection;
 
     /**
-     * File path where CSV data will be read and/or write
+     * Cell count per row
+     *
+     * @var integer
+     */
+    protected $nbcells = 3;
+
+    /**
+     * Row count per CSV document
+     *
+     * @var integer
+     */
+    protected $nbrows = 100;
+
+    /**
+     * The Path to the CSV document to read from/write to
      *
      * @var string
      */
-    private $file;
+    protected $path;
 
     /**
-     * Rows count to be added to or read from the CSV document
+     * Benchmark results
      *
-     * @var int
+     * @var array
      */
-    private $nbrows;
+    private $results = [];
 
+    /**
+     * New CSVBench instance
+     *
+     * @param \CsvBenchmarks\Driver\DriverCollection $collection
+     * @param \League\CLImate\CLImate                $terminal
+     */
     public function __construct(DriverCollection $collection, CLImate $terminal)
     {
         $this->terminal   = $terminal;
         $this->collection = $collection;
     }
 
-    public function setOutputFile($file)
+    /**
+     * Set the file path where the CSV data will be read from/write to
+     *
+     * @param string $path
+     */
+    public function setPath($path)
     {
-        $this->file = trim($file);
+        $this->path = trim($path);
     }
 
-    public function setNbWritingRows($nbrows)
+    /**
+     * Set the rows count to be inserted when writing to the CSV document
+     *
+     * @param int $nbcells
+     */
+    public function setCellCount($nbcells)
     {
-        $this->nbrows =filter_var($nbrows, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'default' => 200000]]);
+        $this->nbcells = filter_var($nbcells, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'default' => 3]]);
     }
 
-    private function benchmarkPackage(Driver $driver, array &$results)
+    /**
+     * Set the rows count to be inserted when writing to the CSV document
+     *
+     * @param int $nbrows
+     */
+    public function setRowCount($nbrows)
     {
-        $package  = $driver->getName();
+        $this->nbrows = filter_var($nbrows, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        if (false === $this->nbrows) {
+            throw new InvalidArgumentException('row count must be a valid positif integer');
+        }
+    }
 
-        //writer test
-        $start    = microtime(true);
-        $nbrows   = $driver->runWriter($this->file, $this->nbrows);
-        $duration = microtime(true) - $start;
-        $results[] = [
-            $package,
-            $this->collection->getPackageVersion($package),
-            'Writer',
-            round($duration * 1000, 2),
-            $nbrows,
-        ];
+    /**
+     * Set the rows count to be inserted when writing to the CSV document
+     *
+     * @param int $iteration
+     */
+    public function setIterationCount($iteration)
+    {
+        $this->iteration = filter_var($iteration, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'default' => 3]]);
+    }
 
-        //reader test
-        $start    = microtime(true);
-        $nbrows   = $driver->runReader($this->file);
-        $duration = microtime(true) - $start;
-        $results[] = [
-            "<cyan>$package</cyan>",
-            '<cyan>'.$this->collection->getPackageVersion($package).'</cyan>',
-            '<cyan>Reader</cyan>',
-            '<cyan>'.round($duration * 1000, 2).'</cyan>',
-            "<cyan>$nbrows</cyan>",
-        ];
+    private function benchmarkPackage(Driver $driver)
+    {
+        $driver->setRowCount($this->nbrows);
+        $driver->setCellCount($this->nbcells);
+        $driver->setPath($this->path);
+        $this->benchmarkMethod($driver, 'runWriter');
+        $this->benchmarkMethod($driver, 'runReader');
+    }
+
+    private function benchmarkMethod(Driver $driver, $method)
+    {
+        for ($i = 0; $i < $this->iteration; $i++) {
+            $start    = microtime(true);
+            $nbrows   = $driver->{$method}();
+            $duration = microtime(true) - $start;
+            $package  = $driver->getName();
+            $this->results[$package][$method][] = [
+                'duration' => round($duration * 1000, 2),
+            ];
+        }
     }
 
     public function __invoke()
@@ -104,19 +150,41 @@ class CsvBench
         $this->terminal->output("Runtime: <yellow>".PHP_VERSION."</yellow>");
         $this->terminal->output("Host: <yellow>".php_uname()."</yellow>");
         $this->terminal->output("Packages tested: <yellow>".count($this->collection)."</yellow>");
-        $this->terminal->output("CSV document output: <yellow>{$this->file}</yellow>");
         $this->terminal->output("Rows to be inserted/read: <yellow>{$this->nbrows}</yellow>");
-        $this->terminal->output("Cells to be inserted/read: <yellow>".($this->nbrows*3)."</yellow>");
-        $this->terminal->output("");
+        $this->terminal->output("Cells to be inserted/read: <yellow>".($this->nbrows*$this->nbcells)."</yellow>");
+        $this->terminal->output("CSV document output: <yellow>{$this->path}</yellow>");
+        $this->terminal->output("Test Iteration: <yellow>".($this->iteration)."</yellow>");
+        foreach ($this->collection as $driver) {
+
+            $this->benchmarkPackage($driver);
+        }
+        $this->cliOutput();
+    }
+
+    private function cliOutput()
+    {
         $table = [[
             '<green>Package</green>',
-            '<green><green>Version</green>',
-            '<green>Action</green>',
-            '<green>Duration (MS)</green>',
-            '<green>NB Rows</green>',
+            '<green>Version</green>',
+            '<green>Test</green>',
+            '<green>Avg Duration (MS)</green>',
         ]];
-        foreach ($this->collection as $driver) {
-            $this->benchmarkPackage($driver, $table);
+        foreach ($this->results as $package => $bench) {
+            $version = $this->collection->getPackageVersion($package);
+            foreach ($bench as $action => $res) {
+                $infos = [
+                    $package,
+                    $version,
+                    $action,
+                    round(array_sum(array_column($res, 'duration')) / $this->iteration, 2),
+                ];
+                if ('runReader' == $action) {
+                    array_walk($infos, function (&$value) {
+                        $value = "<cyan>$value</cyan>";
+                    });
+                }
+                $table[] = $infos;
+            }
         }
         $this->terminal->table($table);
     }

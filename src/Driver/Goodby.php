@@ -29,15 +29,12 @@ class Goodby extends AbstractDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return "goodby/csv";
-    }
+    protected $package_name = "goodby/csv";
 
     /**
      * {@inheritdoc}
      */
-    public function runReader($file)
+    public function runReader()
     {
         $nbrows = 0;
         $interpreter = new Interpreter();
@@ -45,7 +42,7 @@ class Goodby extends AbstractDriver implements Driver
             ++$nbrows;
         });
         $lexer = new Lexer(new LexerConfig());
-        $lexer->parse($file, $interpreter);
+        $lexer->parse($this->path, $interpreter);
 
         return $nbrows;
     }
@@ -53,12 +50,11 @@ class Goodby extends AbstractDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function runWriter($file, $nbrows)
+    public function runWriter()
     {
         $exporter = new Exporter(new ExporterConfig());
-        $exporter->export($file, $this->generateRawData($nbrows));
-        $exporter = null;
+        $exporter->export($this->path, $this->generateRawData());
 
-        return $nbrows;
+        return $this->nbrows;
     }
 }

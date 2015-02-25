@@ -25,18 +25,15 @@ class NativeSplFileObject extends AbstractDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return "SplFileObject";
-    }
+    protected $package_name = "SplFileObject";
 
     /**
      * {@inheritdoc}
      */
-    public function runReader($file)
+    public function runReader()
     {
         $nbrows = 0;
-        $csv = new SplFileObject($file);
+        $csv = new SplFileObject($this->path);
         foreach ($csv as $row) {
             ++$nbrows;
         }
@@ -48,13 +45,13 @@ class NativeSplFileObject extends AbstractDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function runWriter($file, $nbrows)
+    public function runWriter()
     {
-        $csv = new SplFileObject($file, 'w');
-        foreach ($this->generateRawData($nbrows) as $row) {
+        $csv = new SplFileObject($this->path, 'w');
+        foreach ($this->generateRawData() as $row) {
             $csv->fputcsv($row);
         }
 
-        return $nbrows;
+        return $this->nbrows;
     }
 }

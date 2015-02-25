@@ -42,9 +42,9 @@ class DriverCollection implements Countable, IteratorAggregate
             'version' => PHP_VERSION,
             'homepage' => 'http://php.net/splfileobject',
         ],
-        'fopen' => [
+        'filesystem functions' => [
             'version' => PHP_VERSION,
-            'homepage' => 'http://php.net/fopen',
+            'homepage' => 'http://php.net/manual/ref.filesystem.php',
         ]
     ];
 

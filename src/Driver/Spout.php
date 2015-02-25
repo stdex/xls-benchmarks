@@ -27,19 +27,16 @@ class Spout extends AbstractDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return "box/spout";
-    }
+    protected $package_name = "box/spout";
 
     /**
      * {@inheritdoc}
      */
-    public function runReader($file)
+    public function runReader()
     {
         $nbrows = 0;
         $csv = ReaderFactory::create(Type::CSV);
-        $csv->open($file);
+        $csv->open($this->path);
         while ($csv->hasNextRow()) {
             $csv->nextRow();
             ++$nbrows;
@@ -52,15 +49,15 @@ class Spout extends AbstractDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function runWriter($file, $nbrows)
+    public function runWriter()
     {
         $csv = WriterFactory::create(Type::CSV);
-        $csv->openToFile($file);
-        foreach ($this->generateRawData($nbrows) as $row) {
+        $csv->openToFile($this->path);
+        foreach ($this->generateRawData() as $row) {
             $csv->addRow($row);
         }
         $csv->close();
 
-        return $nbrows;
+        return $this->nbrows;
     }
 }

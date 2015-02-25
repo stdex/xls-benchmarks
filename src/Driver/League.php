@@ -26,18 +26,15 @@ class League extends AbstractDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return "league/csv";
-    }
+    protected $package_name = "league/csv";
 
     /**
      * {@inheritdoc}
      */
-    public function runReader($file)
+    public function runReader()
     {
         $nbrows = 0;
-        $csv = Reader::createFromPath($file);
+        $csv = Reader::createFromPath($this->path);
         foreach ($csv as $row) {
             ++$nbrows;
         }
@@ -48,13 +45,11 @@ class League extends AbstractDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function runWriter($file, $nbrows)
+    public function runWriter()
     {
-        $csv = Writer::createFromPath($file, 'w');
-        foreach ($this->generateRawData($nbrows) as $row) {
-            $csv->insertOne($row);
-        }
+        $csv = Writer::createFromPath($this->path, 'w');
+        $csv->insertAll($this->generateRawData());
 
-        return $nbrows;
+        return $this->nbrows;
     }
 }
