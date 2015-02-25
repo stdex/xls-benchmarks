@@ -121,6 +121,12 @@ class CsvBench
         $this->iteration = filter_var($iteration, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'default' => 3]]);
     }
 
+    /**
+     * run the test for a given Driver/Package
+     *
+     * @param  Driver $driver
+     *
+     */
     private function benchmarkPackage(Driver $driver)
     {
         $driver->setRowCount($this->nbrows);
@@ -130,19 +136,29 @@ class CsvBench
         $this->benchmarkMethod($driver, 'runReader');
     }
 
-    private function benchmarkMethod(Driver $driver, $method)
+    /**
+     * run a test for a given Driver/Package
+     *
+     * @param  Driver $driver
+     * @param  string $test
+     *
+     */
+    private function benchmarkMethod(Driver $driver, $test)
     {
         for ($i = 0; $i < $this->iteration; $i++) {
             $start    = microtime(true);
-            $nbrows   = $driver->{$method}();
+            $nbrows   = $driver->{$test}();
             $duration = microtime(true) - $start;
             $package  = $driver->getName();
-            $this->results[$package][$method][] = [
+            $this->results[$package][$test][] = [
                 'duration' => round($duration * 1000, 2),
             ];
         }
     }
 
+    /**
+     * runs all the benchmarks tests
+     */
     public function __invoke()
     {
         $nb_tests = count($this->collection)*2 - 1;
@@ -161,6 +177,9 @@ class CsvBench
         $this->cliOutput();
     }
 
+    /**
+     * Format and Output the result to the console
+     */
     private function cliOutput()
     {
         $table = [[

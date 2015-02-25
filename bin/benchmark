@@ -12,7 +12,6 @@ require $base_dir.'/vendor/autoload.php';
 $path      = $base_dir.'/output/result.csv';
 $terminal  = new CLImate();
 $drivers   = new Driver\DriverCollection($base_dir.'/composer.lock');
-$benchmark = new CsvBench($drivers, $terminal);
 $drivers->add(new Driver\NativeFunctions());
 $drivers->add(new Driver\NativeSplFileObject());
 $drivers->add(new Driver\Spout());
@@ -69,6 +68,7 @@ if (isset($args['cells'])) {
     $nbcells = $args['cells'];
 }
 
+$benchmark = new CsvBench($drivers, $terminal);
 $benchmark->setPath($path);
 $benchmark->setRowCount($args['rows']);
 $benchmark->setCellCount($nbcells);

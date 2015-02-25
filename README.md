@@ -61,9 +61,26 @@ Tested packages
 - [league/csv](https://github.com/thephpleague/csv) [![Latest Version](https://img.shields.io/github/release/thephpleague/csv.svg?style=flat-square)](https://github.com/thephpleague/csv/releases)
 
 Requirements
--------
+---
 
 You need **PHP >=5.5.0** or **HHVM >= 3.2** to be sure the test will run. (PHP Generators as used to ease generating huge CSV documents).
+
+Installation
+----
+
+```
+$ composer require nyamsprod/csv-benchmarks
+```
+
+Usage
+----
+
+```
+$ php bin/benchmark
+```
+
+Will display a help message with all the information needed.
+
 
 Adding a new package
 ----
