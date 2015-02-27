@@ -53,6 +53,13 @@ class CsvBench
     protected $nbrows = 100;
 
     /**
+     * Test iteration
+     *
+     * @var integer
+     */
+    protected $iteration = 3;
+
+    /**
      * The Path to the CSV document to read from/write to
      *
      * @var string
@@ -122,41 +129,6 @@ class CsvBench
     }
 
     /**
-     * run the test for a given Driver/Package
-     *
-     * @param  Driver $driver
-     *
-     */
-    private function benchmarkPackage(Driver $driver)
-    {
-        $driver->setRowCount($this->nbrows);
-        $driver->setCellCount($this->nbcells);
-        $driver->setPath($this->path);
-        $this->benchmarkMethod($driver, 'runWriter');
-        $this->benchmarkMethod($driver, 'runReader');
-    }
-
-    /**
-     * run a test for a given Driver/Package
-     *
-     * @param  Driver $driver
-     * @param  string $test
-     *
-     */
-    private function benchmarkMethod(Driver $driver, $test)
-    {
-        for ($i = 0; $i < $this->iteration; $i++) {
-            $start    = microtime(true);
-            $nbrows   = $driver->{$test}();
-            $duration = microtime(true) - $start;
-            $package  = $driver->getName();
-            $this->results[$package][$test][] = [
-                'duration' => round($duration * 1000, 2),
-            ];
-        }
-    }
-
-    /**
      * runs all the benchmarks tests
      */
     public function __invoke()
@@ -171,8 +143,12 @@ class CsvBench
         $this->terminal->output("CSV document output: <yellow>{$this->path}</yellow>");
         $this->terminal->output("Test Iteration: <yellow>".($this->iteration)."</yellow>");
         foreach ($this->collection as $driver) {
-
-            $this->benchmarkPackage($driver);
+            $driver->setRowCount($this->nbrows);
+            $driver->setCellCount($this->nbcells);
+            $driver->setPath($this->path);
+            $driver->setIterationCount($this->iteration);
+            $package = $driver->getName();
+            $this->results[$package] = $driver();
         }
         $this->cliOutput();
     }
@@ -190,6 +166,7 @@ class CsvBench
         ]];
         foreach ($this->results as $package => $bench) {
             $version = $this->collection->getPackageVersion($package);
+            $index = 0;
             foreach ($bench as $action => $res) {
                 $infos = [
                     $package,
@@ -197,11 +174,12 @@ class CsvBench
                     $action,
                     round(array_sum(array_column($res, 'duration')) / $this->iteration, 2),
                 ];
-                if ('runReader' == $action) {
+                if (0 == $index % 2) {
                     array_walk($infos, function (&$value) {
                         $value = "<cyan>$value</cyan>";
                     });
                 }
+                ++$index;
                 $table[] = $infos;
             }
         }

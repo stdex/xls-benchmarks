@@ -63,6 +63,20 @@ interface Driver
     public function getPath();
 
     /**
+     * Set the rows count to be inserted when writing to the CSV document
+     *
+     * @param int $iteration
+     */
+    public function setIterationCount($iteration);
+
+    /**
+     * return test iteration count
+     *
+     * @return int
+     */
+    public function getIterationCount();
+
+    /**
      * Return the Package Name
      *
      * @return string
@@ -70,14 +84,9 @@ interface Driver
     public function getName();
 
     /**
-     * Reader test
+     * Run the tests
      *
-     * @return int  the number of lines read
+     * @return array
      */
-    public function runReader();
-
-    /**
-     * Writer test
-     */
-    public function runWriter();
+    public function __invoke();
 }

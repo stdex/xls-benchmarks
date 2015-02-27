@@ -12,6 +12,9 @@
  */
 namespace CsvBenchmarks\Driver;
 
+use ReflectionClass;
+use ReflectionMethod;
+
 /**
  * An Interface to create package specific tests
  *
@@ -40,6 +43,13 @@ class AbstractDriver
      * @var integer
      */
     protected $nbrows = 100;
+
+    /**
+     * Test iteration
+     *
+     * @var integer
+     */
+    protected $iteration = 3;
 
     /**
      * The Path to the CSV document to read from/write to
@@ -109,6 +119,26 @@ class AbstractDriver
     }
 
     /**
+     * Set the rows count to be inserted when writing to the CSV document
+     *
+     * @param int $iteration
+     */
+    public function setIterationCount($iteration)
+    {
+        $this->iteration = filter_var($iteration, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'default' => 3]]);
+    }
+
+    /**
+     * return test iteration count
+     *
+     * @return int
+     */
+    public function getIterationCount()
+    {
+        return $this->iteration;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getName()
@@ -136,5 +166,40 @@ class AbstractDriver
             }
             yield $arr;
         }
+    }
+
+    /**
+     * run a test for a given Driver/Package
+     */
+    public function __invoke()
+    {
+        $results = [];
+        $reflection = new ReflectionClass($this);
+        $methods = array_filter($reflection->getMethods(ReflectionMethod::IS_PUBLIC), function ($method) {
+            return preg_match('/Test$/', $method->name);
+        });
+
+        uasort($methods, function ($met1, $met2) {
+            if ('writerTest' == $met1->name) {
+                return -1;
+            } elseif ('writerTest' == $met2->name) {
+                return 1;
+            }
+
+            return strcasecmp($met1->name, $met2->name);
+        });
+
+        foreach ($methods as $method) {
+            for ($i = 0; $i < $this->iteration; $i++) {
+                $start = microtime(true);
+                $method->invoke($this);
+                $duration = microtime(true) - $start;
+                $results[$method->name][] = [
+                    'duration' => round($duration * 1000, 2),
+                ];
+            }
+        }
+
+        return $results;
     }
 }

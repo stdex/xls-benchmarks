@@ -34,23 +34,20 @@ class Goodby extends AbstractDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function runReader()
+    public function readerTest()
     {
-        $nbrows = 0;
         $interpreter = new Interpreter();
-        $interpreter->addObserver(function (array $rows) use (&$nbrows) {
-            ++$nbrows;
+        $interpreter->addObserver(function (array $rows) {
+
         });
         $lexer = new Lexer(new LexerConfig());
         $lexer->parse($this->path, $interpreter);
-
-        return $nbrows;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function runWriter()
+    public function writerTest()
     {
         $exporter = new Exporter(new ExporterConfig());
         $exporter->export($this->path, $this->generateRawData());

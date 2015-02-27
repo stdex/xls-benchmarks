@@ -1,6 +1,7 @@
 {
     "name" : "nyamsprod/csv-benchmarks",
-    "description" : "benchmark to compare famous PHP CSV parsing libraries out of the box",
+    "description" : "benchmark to compare famous PHP CSV libraries",
+    "keywords": ["csv", "benchmark"],
     "license" : "MIT",
     "homepage" : "https://github.com/nyamsprod/csv-benchmarks",
     "authors" : [

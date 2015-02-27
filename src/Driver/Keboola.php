@@ -30,27 +30,21 @@ class Keboola extends AbstractDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function runReader()
+    public function readerTest()
     {
-        $nbrows = 0;
         $csv = new CsvFile($this->path);
         foreach ($csv as $row) {
-            $nbrows++;
         }
-
-        return $nbrows;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function runWriter()
+    public function writerTest()
     {
         $csv = new CsvFile($this->path);
         foreach ($this->generateRawData() as $row) {
             $csv->writeRow($row);
         }
-
-        return $this->nbrows;
     }
 }

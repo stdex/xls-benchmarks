@@ -31,27 +31,21 @@ class EasyCsv extends AbstractDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function runReader()
+    public function readerTest()
     {
-        $nbrows = 0;
         $csv = new Reader($this->path, 'r+', false);
         while ($row = $csv->getRow()) {
-            $nbrows++;
         }
-
-        return $nbrows;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function runWriter()
+    public function writerTest()
     {
         $csv = new Writer($this->path, 'w');
         foreach ($this->generateRawData() as $row) {
             $csv->writeRow($row);
         }
-
-        return $this->nbrows;
     }
 }

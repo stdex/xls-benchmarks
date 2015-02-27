@@ -28,29 +28,24 @@ class NativeFunctions extends AbstractDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function runReader()
+    public function readerTest()
     {
-        $nbrows = 0;
         $csv = fopen($this->path, 'r');
         while (false !== ($data = fgetcsv($csv))) {
-            ++$nbrows;
+
         }
         fclose($csv);
-
-        return $nbrows;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function runWriter()
+    public function writerTest()
     {
         $csv = fopen($this->path, 'w');
         foreach ($this->generateRawData() as $row) {
             fputcsv($csv, $row);
         }
         fclose($csv);
-
-        return $this->nbrows;
     }
 }
