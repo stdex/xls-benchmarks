@@ -10,31 +10,38 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace CsvBenchmarks\Driver;
+namespace CsvBenchmarks\Drivers;
 
-use SplFileObject;
+use Box\Spout\Common\Type;
+use Box\Spout\Reader\ReaderFactory;
+use Box\Spout\Writer\WriterFactory;
+use CsvBenchmarks\AbstractDriver;
+use CsvBenchmarks\Driver;
 
 /**
- * SplFileObject driver
+ * box/spout driver
  *
  * @package csv-benchmarks
  * @since  0.1.0
  */
-class NativeSplFileObject extends AbstractDriver implements Driver
+class Spout extends AbstractDriver implements Driver
 {
     /**
      * {@inheritdoc}
      */
-    protected $package_name = "SplFileObject";
+    protected $package_name = "box/spout";
 
     /**
      * {@inheritdoc}
      */
     public function readerTest()
     {
-        $csv = new SplFileObject($this->path);
-        foreach ($csv as $row) {
+        $csv = ReaderFactory::create(Type::CSV);
+        $csv->open($this->path);
+        while ($csv->hasNextRow()) {
+            $csv->nextRow();
         }
+        $csv->close();
     }
 
     /**
@@ -42,9 +49,11 @@ class NativeSplFileObject extends AbstractDriver implements Driver
      */
     public function writerTest()
     {
-        $csv = new SplFileObject($this->path, 'w');
+        $csv = WriterFactory::create(Type::CSV);
+        $csv->openToFile($this->path);
         foreach ($this->generateRawData() as $row) {
-            $csv->fputcsv($row);
+            $csv->addRow($row);
         }
+        $csv->close();
     }
 }

@@ -10,36 +10,33 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace CsvBenchmarks\Driver;
+namespace CsvBenchmarks\Drivers;
 
-use Box\Spout\Common\Type;
-use Box\Spout\Reader\ReaderFactory;
-use Box\Spout\Writer\WriterFactory;
+use CsvBenchmarks\AbstractDriver;
+use CsvBenchmarks\Driver;
 
 /**
- * box/spout driver
+ * Native functions fopen/fputcsv/fgetcsv driver
  *
  * @package csv-benchmarks
  * @since  0.1.0
  */
-class Spout extends AbstractDriver implements Driver
+class NativeFunctions extends AbstractDriver implements Driver
 {
     /**
      * {@inheritdoc}
      */
-    protected $package_name = "box/spout";
+    protected $package_name = "filesystem functions";
 
     /**
      * {@inheritdoc}
      */
     public function readerTest()
     {
-        $csv = ReaderFactory::create(Type::CSV);
-        $csv->open($this->path);
-        while ($csv->hasNextRow()) {
-            $csv->nextRow();
+        $csv = fopen($this->path, 'r');
+        while (false !== ($data = fgetcsv($csv))) {
         }
-        $csv->close();
+        fclose($csv);
     }
 
     /**
@@ -47,11 +44,10 @@ class Spout extends AbstractDriver implements Driver
      */
     public function writerTest()
     {
-        $csv = WriterFactory::create(Type::CSV);
-        $csv->openToFile($this->path);
+        $csv = fopen($this->path, 'w');
         foreach ($this->generateRawData() as $row) {
-            $csv->addRow($row);
+            fputcsv($csv, $row);
         }
-        $csv->close();
+        fclose($csv);
     }
 }

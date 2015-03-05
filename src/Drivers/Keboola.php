@@ -10,31 +10,33 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace CsvBenchmarks\Driver;
+namespace CsvBenchmarks\Drivers;
+
+use CsvBenchmarks\AbstractDriver;
+use CsvBenchmarks\Driver;
+use Keboola\Csv\CsvFile;
 
 /**
- * Native functions fopen/fputcsv/fgetcsv driver
+ * keboola/csv driver
  *
  * @package csv-benchmarks
  * @since  0.1.0
  */
-class NativeFunctions extends AbstractDriver implements Driver
+class Keboola extends AbstractDriver implements Driver
 {
     /**
      * {@inheritdoc}
      */
-    protected $package_name = "filesystem functions";
+    protected $package_name = "keboola/csv";
 
     /**
      * {@inheritdoc}
      */
     public function readerTest()
     {
-        $csv = fopen($this->path, 'r');
-        while (false !== ($data = fgetcsv($csv))) {
-
+        $csv = new CsvFile($this->path);
+        foreach ($csv as $row) {
         }
-        fclose($csv);
     }
 
     /**
@@ -42,10 +44,9 @@ class NativeFunctions extends AbstractDriver implements Driver
      */
     public function writerTest()
     {
-        $csv = fopen($this->path, 'w');
+        $csv = new CsvFile($this->path);
         foreach ($this->generateRawData() as $row) {
-            fputcsv($csv, $row);
+            $csv->writeRow($row);
         }
-        fclose($csv);
     }
 }

@@ -2,23 +2,24 @@
 <?php
 
 use CsvBenchmarks\CsvBench;
-use CsvBenchmarks\Driver;
+use CsvBenchmarks\DriverCollection;
+use CsvBenchmarks\Drivers;
 use League\CLImate\CLImate;
 
 $base_dir = dirname(__DIR__);
 
 require $base_dir.'/vendor/autoload.php';
 
-$path      = $base_dir.'/output/result.csv';
-$terminal  = new CLImate();
-$drivers   = new Driver\DriverCollection($base_dir.'/composer.lock');
-$drivers->add(new Driver\NativeFunctions());
-$drivers->add(new Driver\NativeSplFileObject());
-$drivers->add(new Driver\Spout());
-$drivers->add(new Driver\EasyCsv());
-$drivers->add(new Driver\Goodby());
-$drivers->add(new Driver\Keboola());
-$drivers->add(new Driver\League());
+$path     = $base_dir.'/output/result.csv';
+$terminal = new CLImate();
+$drivers  = new DriverCollection($base_dir.'/composer.lock');
+$drivers->add(new Drivers\NativeFunctions());
+$drivers->add(new Drivers\NativeSplFileObject());
+$drivers->add(new Drivers\Spout());
+$drivers->add(new Drivers\EasyCsv());
+$drivers->add(new Drivers\Goodby());
+$drivers->add(new Drivers\Keboola());
+$drivers->add(new Drivers\League());
 
 //DON'T EDIT BELOW!!
 

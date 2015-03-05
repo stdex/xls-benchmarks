@@ -10,30 +10,33 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace CsvBenchmarks\Driver;
+namespace CsvBenchmarks\Drivers;
 
-use Keboola\Csv\CsvFile;
+use CsvBenchmarks\AbstractDriver;
+use CsvBenchmarks\Driver;
+use EasyCSV\Reader;
+use EasyCSV\Writer;
 
 /**
- * keboola/csv driver
+ * jwage/easy-csv driver
  *
  * @package csv-benchmarks
  * @since  0.1.0
  */
-class Keboola extends AbstractDriver implements Driver
+class EasyCsv extends AbstractDriver implements Driver
 {
     /**
      * {@inheritdoc}
      */
-    protected $package_name = "keboola/csv";
+    protected $package_name = "jwage/easy-csv";
 
     /**
      * {@inheritdoc}
      */
     public function readerTest()
     {
-        $csv = new CsvFile($this->path);
-        foreach ($csv as $row) {
+        $csv = new Reader($this->path, 'r+', false);
+        while ($row = $csv->getRow()) {
         }
     }
 
@@ -42,7 +45,7 @@ class Keboola extends AbstractDriver implements Driver
      */
     public function writerTest()
     {
-        $csv = new CsvFile($this->path);
+        $csv = new Writer($this->path, 'w');
         foreach ($this->generateRawData() as $row) {
             $csv->writeRow($row);
         }

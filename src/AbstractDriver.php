@@ -10,7 +10,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace CsvBenchmarks\Driver;
+namespace CsvBenchmarks;
 
 use ReflectionClass;
 use ReflectionMethod;
@@ -176,18 +176,15 @@ class AbstractDriver
         $results = [];
         $reflection = new ReflectionClass($this);
         $methods = array_filter($reflection->getMethods(ReflectionMethod::IS_PUBLIC), function ($method) {
-            return preg_match('/Test$/', $method->name);
+            $str = $method->name;
+            return strpos(strrev($str), 'tseT') === 0 && ! in_array($str, ['writerTest', 'readerTest']);
         });
 
-        uasort($methods, function ($met1, $met2) {
-            if ('writerTest' == $met1->name) {
-                return -1;
-            } elseif ('writerTest' == $met2->name) {
-                return 1;
-            }
-
-            return strcasecmp($met1->name, $met2->name);
-        });
+        array_unshift(
+            $methods,
+            new ReflectionMethod($this, 'writerTest'),
+            new ReflectionMethod($this, 'readerTest')
+        );
 
         foreach ($methods as $method) {
             for ($i = 0; $i < $this->iteration; $i++) {

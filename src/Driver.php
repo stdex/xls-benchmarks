@@ -10,7 +10,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace CsvBenchmarks\Driver;
+namespace CsvBenchmarks;
 
 /**
  * An Interface to create package specific tests
@@ -82,6 +82,20 @@ interface Driver
      * @return string
      */
     public function getName();
+
+    /**
+     * Test the basic reading capability of a driver
+     *
+     * @return void
+     */
+    public function readerTest();
+
+    /**
+     * Test the basic writing capability of a driver
+     *
+     * @return void
+     */
+    public function writerTest();
 
     /**
      * Run the tests

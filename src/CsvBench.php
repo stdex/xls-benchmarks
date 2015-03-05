@@ -14,8 +14,6 @@ namespace CsvBenchmarks;
 
 use League\CLImate\CLImate;
 use InvalidArgumentException;
-use CsvBenchmarks\Driver\Driver;
-use CsvBenchmarks\Driver\DriverCollection;
 
 /**
  * A collection of benchmarks

@@ -10,7 +10,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace CsvBenchmarks\Driver;
+namespace CsvBenchmarks;
 
 use ArrayIterator;
 use Countable;
@@ -28,7 +28,7 @@ class DriverCollection implements Countable, IteratorAggregate
     /**
      * Drivers
      *
-     * @var CsvBenchmarks\Driver\Driver[]
+     * @var CsvBenchmarks\Driver[]
      */
     private $benchmarks = [];
 

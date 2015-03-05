@@ -10,8 +10,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace CsvBenchmarks\Driver;
+namespace CsvBenchmarks\Drivers;
 
+use CsvBenchmarks\AbstractDriver;
+use CsvBenchmarks\Driver;
 use Goodby\CSV\Import\Standard\Interpreter;
 use Goodby\CSV\Import\Standard\Lexer;
 use Goodby\CSV\Import\Standard\LexerConfig;
@@ -51,7 +53,5 @@ class Goodby extends AbstractDriver implements Driver
     {
         $exporter = new Exporter(new ExporterConfig());
         $exporter->export($this->path, $this->generateRawData());
-
-        return $this->nbrows;
     }
 }
