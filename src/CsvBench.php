@@ -12,6 +12,7 @@
  */
 namespace CsvBenchmarks;
 
+use CallbackFilterIterator;
 use League\CLImate\CLImate;
 use InvalidArgumentException;
 
@@ -32,9 +33,16 @@ class CsvBench
     /**
      * Driver collection
      *
-     * @var \CsvBenchmarks\Driver\DriverCollection
+     * @var \CsvBenchmarks\DriverCollection
      */
     private $collection;
+
+    /**
+     * Package collection
+     *
+     * @var \CsvBenchmarks\PackageCollection
+     */
+    private $packages;
 
     /**
      * Cell count per row
@@ -77,10 +85,11 @@ class CsvBench
      * @param \CsvBenchmarks\Driver\DriverCollection $collection
      * @param \League\CLImate\CLImate                $terminal
      */
-    public function __construct(DriverCollection $collection, CLImate $terminal)
+    public function __construct(DriverCollection $collection, PackageCollection $packages, CLImate $terminal)
     {
-        $this->terminal   = $terminal;
         $this->collection = $collection;
+        $this->packages   = $packages;
+        $this->terminal   = $terminal;
     }
 
     /**
@@ -140,7 +149,10 @@ class CsvBench
         $this->terminal->output("Cells to be inserted/read: <yellow>".($this->nbrows*$this->nbcells)."</yellow>");
         $this->terminal->output("CSV document output: <yellow>{$this->path}</yellow>");
         $this->terminal->output("Test Iteration: <yellow>".($this->iteration)."</yellow>");
-        foreach ($this->collection as $driver) {
+        $tests = new CallbackFilterIterator($this->collection->getIterator(), function (Driver $driver) {
+            return $this->packages->has($driver->getName());
+        });
+        foreach ($tests as $driver) {
             $driver->setRowCount($this->nbrows);
             $driver->setCellCount($this->nbcells);
             $driver->setPath($this->path);
@@ -163,12 +175,12 @@ class CsvBench
             '<green>Avg Duration (MS)</green>',
         ]];
         foreach ($this->results as $package => $bench) {
-            $version = $this->collection->getPackageVersion($package);
+            $package_info = $this->packages->get($package);
             $index = 0;
             foreach ($bench as $action => $res) {
                 $infos = [
                     $package,
-                    $version,
+                    $package_info['version'],
                     $action,
                     round(array_sum(array_column($res, 'duration')) / $this->iteration, 2),
                 ];

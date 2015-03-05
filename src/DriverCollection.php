@@ -33,47 +33,6 @@ class DriverCollection implements Countable, IteratorAggregate
     private $benchmarks = [];
 
     /**
-     * Package listing
-     *
-     * @var array
-     */
-    private $package_list = [
-        'SplFileObject' => [
-            'version' => PHP_VERSION,
-            'homepage' => 'http://php.net/splfileobject',
-        ],
-        'filesystem functions' => [
-            'version' => PHP_VERSION,
-            'homepage' => 'http://php.net/manual/ref.filesystem.php',
-        ]
-    ];
-
-    /**
-     * a new instance of DriverCollection
-     *
-     * @param string $composer_lock path to the composer.lock file
-     */
-    public function __construct($composer_lock)
-    {
-        $json = json_decode(file_get_contents($composer_lock), true);
-        $packages = array_filter($json['packages'], function (array $package) {
-            return 'league/climate' !== $package['name'];
-        });
-
-        foreach ($packages as $package) {
-            if ('league/csv' == $package['name'] && empty($package['homepage'])) {
-                $package['homepage'] = 'http://csv.thephpleague.com';
-            }
-
-            $this->package_list[$package['name']] = [
-                'version' => $package['version'],
-                'homepage' => $package['homepage'],
-            ];
-        }
-        ksort($this->package_list);
-    }
-
-    /**
      * IteratorAggregate interface
      *
      * @return \Iterator
@@ -86,41 +45,11 @@ class DriverCollection implements Countable, IteratorAggregate
     /**
      * Countable Interface
      *
-     * @param  int $mode count mode
-     *
      * @return int
      */
-    public function count($mode = COUNT_NORMAL)
+    public function count()
     {
-        return count($this->benchmarks, $mode);
-    }
-
-    /**
-     * Returns the package found
-     *
-     * @return array
-     */
-    public function getPackageList()
-    {
-        return $this->package_list;
-    }
-
-    /**
-     * Returns the package version as seen by composer
-     *
-     * @param string $package
-     *
-     * @throws \InvalidArgumentException If the package is not recognized
-     *
-     * @return string
-     */
-    public function getPackageVersion($package)
-    {
-        if (! array_key_exists($package, $this->package_list)) {
-            throw new InvalidArgumentException('The specified package is not registered in composer file');
-        }
-
-        return $this->package_list[$package]['version'];
+        return count($this->benchmarks);
     }
 
     /**
@@ -132,10 +61,22 @@ class DriverCollection implements Countable, IteratorAggregate
      */
     public function add(Driver $driver)
     {
-        if (! array_key_exists($driver->getName(), $this->package_list)) {
-            throw new InvalidArgumentException('The specified package is not registered in composer file');
+        if ($this->has($driver)) {
+            throw new InvalidArgumentException('The specified package is already registered');
         }
 
         $this->benchmarks[] = $driver;
+    }
+
+    public function has(Driver $driver)
+    {
+        return false !== array_search($driver, $this->benchmarks, true);
+    }
+
+    public function remove(Driver $driver)
+    {
+        if (false !== ($key = array_search($driver, $this->benchmarks, true))) {
+            unset($this->benchmarks[$key]);
+        }
     }
 }
