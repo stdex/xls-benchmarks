@@ -4,15 +4,15 @@ CSV Benchmarks (PHP)
 [![Build Status](https://travis-ci.org/nyamsprod/csv-benchmarks.svg?branch=master)](https://travis-ci.org/nyamsprod/csv-benchmarks)
 [![Latest Version](https://img.shields.io/github/release/nyamsprod/csv-benchmarks.svg?style=flat-square)](https://github.com/nyamsprod/csv-benchmarks/releases)
 
-All CSV packages are managed by composer. Tested with the latest stable version
-
-[**See the latest benchmark on Travis-CI**](https://travis-ci.org/nyamsprod/csv-benchmarks)
-
 As  [Nikita Popov](http://nikic.github.io/) once said: 
 
 > Never trust a benchmark you didn't fake yourself.
 
 While developping [league\csv](http://csv.thephpleague.com/) latest major version, I did some benchmarks against other well established CSV libraries in PHP to improve the package speed. Here's the code source, have fun with it !!
+
+All CSV packages are managed by composer. Tested with the latest stable version
+
+[**See the latest benchmark on Travis-CI**](https://travis-ci.org/nyamsprod/csv-benchmarks)
 
 ```
 $  php bin/benchmark --rows=100 --iteration=10 --cells=10
