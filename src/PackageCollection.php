@@ -56,9 +56,6 @@ class PackageCollection implements Countable, IteratorAggregate
         });
 
         foreach ($packages as $package) {
-            if ('league/csv' == $package['name'] && empty($package['homepage'])) {
-                $package['homepage'] = 'http://csv.thephpleague.com';
-            }
             $this->add($package['name'], $package['version'], $package['homepage']);
         }
     }
