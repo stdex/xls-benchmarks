@@ -2,6 +2,11 @@
 
 All Notable changes to `nyamsprod\csv-benchmarks` will be documented in this file
 
+### 0.3.0
+
+- Update spout version
+- Update travis settings
+
 ### 0.2.0
 
 - adding `iteration` option to set the number of iteration for each test default to `3`;

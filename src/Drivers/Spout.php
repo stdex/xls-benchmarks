@@ -38,8 +38,9 @@ class Spout extends AbstractDriver implements Driver
     {
         $csv = ReaderFactory::create(Type::CSV);
         $csv->open($this->path);
-        while ($csv->hasNextRow()) {
-            $csv->nextRow();
+        foreach ($csv->getSheetIterator() as $sheet) {
+            foreach ($sheet->getRowIterator() as $row) {
+            }
         }
         $csv->close();
     }
