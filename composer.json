@@ -1,5 +1,4 @@
 {
-    "optimize-autoloader": true,
     "minimum-stability": "dev",
     "name" : "stdex/xls-benchmarks",
     "description" : "benchmark to compare famous PHP XLS libraries",
