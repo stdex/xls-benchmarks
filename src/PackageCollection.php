@@ -1,16 +1,6 @@
 <?php
-/**
- * This file is part of the csv-benchmarks library
- *
- * @license http://opensource.org/licenses/MIT
- * @link https://github.com/nyamsprod/csv-benchmark
- * @version 0.1.0
- * @package csv-benchmarks
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-namespace CsvBenchmarks;
+
+namespace XlsBenchmarks;
 
 use ArrayIterator;
 use Countable;
@@ -20,7 +10,7 @@ use IteratorAggregate;
 /**
  * A collection of benchmarks and packagelist
  *
- * @package csv-benchmarks
+ * @package xls-benchmarks
  * @since  0.1.0
  */
 class PackageCollection implements Countable, IteratorAggregate
@@ -30,16 +20,7 @@ class PackageCollection implements Countable, IteratorAggregate
      *
      * @var array
      */
-    private $package_list = [
-        'SplFileObject' => [
-            'version' => PHP_VERSION,
-            'homepage' => 'http://php.net/splfileobject',
-        ],
-        'filesystem functions' => [
-            'version' => PHP_VERSION,
-            'homepage' => 'http://php.net/manual/ref.filesystem.php',
-        ]
-    ];
+    private $package_list = [];
 
     /**
      * addPackageFromComposer
@@ -51,8 +32,29 @@ class PackageCollection implements Countable, IteratorAggregate
     public function addPackageFromComposer($composer_lock)
     {
         $json = json_decode(file_get_contents($composer_lock), true);
-        $packages = array_filter($json['packages'], function (array $package) {
-            return 'league/climate' !== $package['name'];
+        $skip = [
+            'guzzlehttp/guzzle',
+            'guzzlehttp/promises',
+            'guzzlehttp/psr7',
+            'maennchen/zipstream-php',
+            'markbaker/complex',
+            'markbaker/matrix',
+            'myclabs/php-enum',
+            'pear/console_getopt',
+            'pear/ole',
+            'pear/pear-core-minimal',
+            'pear/pear_exception',
+            'psr/http-client',
+            'psr/http-message',
+            'psr/log',
+            'psr/simple-cache',
+            'ralouphie/getallheaders',
+            'seld/cli-prompt',
+            'symfony/polyfill-mbstring',
+            'league/climate',
+        ];
+        $packages = array_filter($json['packages'], function (array $package) use ($skip) {
+            return !in_array($package['name'], $skip, true);
         });
 
         foreach ($packages as $package) {

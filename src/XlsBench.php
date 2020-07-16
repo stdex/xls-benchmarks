@@ -1,16 +1,6 @@
 <?php
-/**
- * This file is part of the csv-benchmarks library
- *
- * @license http://opensource.org/licenses/MIT
- * @link https://github.com/nyamsprod/csv-benchmark
- * @version 0.1.0
- * @package csv-benchmarks
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-namespace CsvBenchmarks;
+
+namespace XlsBenchmarks;
 
 use CallbackFilterIterator;
 use League\CLImate\CLImate;
@@ -18,10 +8,10 @@ use InvalidArgumentException;
 
 /**
  * A collection of benchmarks
- * @package csv-benchmarks
+ * @package xls-benchmarks
  * @since  0.1.0
  */
-class CsvBench
+class XlsBench
 {
     /**
      * Console output
@@ -33,14 +23,14 @@ class CsvBench
     /**
      * Driver collection
      *
-     * @var \CsvBenchmarks\DriverCollection
+     * @var \XlsBenchmarks\DriverCollection
      */
     private $collection;
 
     /**
      * Package collection
      *
-     * @var \CsvBenchmarks\PackageCollection
+     * @var \XlsBenchmarks\PackageCollection
      */
     private $packages;
 
@@ -52,7 +42,7 @@ class CsvBench
     protected $nbcells = 3;
 
     /**
-     * Row count per CSV document
+     * Row count per XLS document
      *
      * @var integer
      */
@@ -66,7 +56,7 @@ class CsvBench
     protected $iteration = 3;
 
     /**
-     * The Path to the CSV document to read from/write to
+     * The Path to the XLS document to read from/write to
      *
      * @var string
      */
@@ -80,9 +70,9 @@ class CsvBench
     private $results = [];
 
     /**
-     * New CSVBench instance
+     * New XLSBench instance
      *
-     * @param \CsvBenchmarks\Driver\DriverCollection $collection
+     * @param \XlsBenchmarks\Driver\DriverCollection $collection
      * @param \League\CLImate\CLImate                $terminal
      */
     public function __construct(DriverCollection $collection, PackageCollection $packages, CLImate $terminal)
@@ -93,7 +83,7 @@ class CsvBench
     }
 
     /**
-     * Set the file path where the CSV data will be read from/write to
+     * Set the file path where the XLS data will be read from/write to
      *
      * @param string $path
      */
@@ -103,7 +93,7 @@ class CsvBench
     }
 
     /**
-     * Set the rows count to be inserted when writing to the CSV document
+     * Set the rows count to be inserted when writing to the XLS document
      *
      * @param int $nbcells
      */
@@ -113,7 +103,7 @@ class CsvBench
     }
 
     /**
-     * Set the rows count to be inserted when writing to the CSV document
+     * Set the rows count to be inserted when writing to the XLS document
      *
      * @param int $nbrows
      */
@@ -126,7 +116,7 @@ class CsvBench
     }
 
     /**
-     * Set the rows count to be inserted when writing to the CSV document
+     * Set the rows count to be inserted when writing to the XLS document
      *
      * @param int $iteration
      */
@@ -141,13 +131,13 @@ class CsvBench
     public function __invoke()
     {
         $nb_tests = count($this->collection)*2 - 1;
-        $this->terminal->output("<green>CSV Benchmark</green>");
+        $this->terminal->output("<green>XLS Benchmark</green>");
         $this->terminal->output("Runtime: <yellow>".PHP_VERSION."</yellow>");
         $this->terminal->output("Host: <yellow>".php_uname()."</yellow>");
         $this->terminal->output("Packages tested: <yellow>".count($this->collection)."</yellow>");
         $this->terminal->output("Rows to be inserted/read: <yellow>{$this->nbrows}</yellow>");
         $this->terminal->output("Cells to be inserted/read: <yellow>".($this->nbrows*$this->nbcells)."</yellow>");
-        $this->terminal->output("CSV document output: <yellow>{$this->path}</yellow>");
+        $this->terminal->output("XLS document output: <yellow>{$this->path}</yellow>");
         $this->terminal->output("Test Iteration: <yellow>".($this->iteration)."</yellow>");
         $tests = new CallbackFilterIterator($this->collection->getIterator(), function (Driver $driver) {
             return $this->packages->has($driver->getName());
@@ -173,6 +163,7 @@ class CsvBench
             '<green>Version</green>',
             '<green>Test</green>',
             '<green>Avg Duration (MS)</green>',
+            '<green>Avg Peak memory usage (MB)</green>',
         ]];
         foreach ($this->results as $package => $bench) {
             $package_info = $this->packages->get($package);
@@ -183,6 +174,7 @@ class CsvBench
                     $package_info['version'],
                     $action,
                     round(array_sum(array_column($res, 'duration')) / $this->iteration, 2),
+                    round(array_sum(array_column($res, 'memory')) / $this->iteration, 2),
                 ];
                 if (0 == $index % 2) {
                     array_walk($infos, function (&$value) {

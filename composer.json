@@ -1,29 +1,20 @@
 {
-    "name" : "nyamsprod/csv-benchmarks",
-    "description" : "benchmark to compare famous PHP CSV libraries",
-    "keywords": ["csv", "benchmark"],
+    "optimize-autoloader": true,
+    "minimum-stability": "dev",
+    "name" : "stdex/xls-benchmarks",
+    "description" : "benchmark to compare famous PHP XLS libraries",
+    "keywords": ["xls", "benchmark"],
     "license" : "MIT",
-    "homepage" : "https://github.com/nyamsprod/csv-benchmarks",
-    "authors" : [
-        {
-            "name" : "Ignace Nyamagana Butera",
-            "email" : "nyamsprod@gmail.com",
-            "homepage": "https://github.com/nyamsprod",
-            "role": "Developer"
-        }
-    ],
+    "homepage" : "https://github.com/stdex/xls-benchmarks",
     "autoload": {
         "psr-4" : {
-            "CsvBenchmarks\\" : "src"
+            "XlsBenchmarks\\" : "src"
         }
     },
     "require": {
-        "php": ">=5.5.0",
-        "box/spout": "^2.0",
-        "goodby/csv": "^1.2",
-        "jwage/easy-csv": "0.0.2.*",
-        "league/csv": "dev-master",
-        "keboola/csv": "^1.1",
-        "league/climate": "^2.6"
+        "box/spout": "^2.7",
+        "phpoffice/phpspreadsheet": "1.*",
+        "pear/spreadsheet_excel_writer": "dev-master",
+        "league/climate": "^3.5"
     }
 }

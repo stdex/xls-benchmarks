@@ -1,16 +1,6 @@
 <?php
-/**
- * This file is part of the csv-benchmarks library
- *
- * @license http://opensource.org/licenses/MIT
- * @link https://github.com/nyamsprod/csv-benchmark
- * @version 0.1.0
- * @package csv-benchmarks
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-namespace CsvBenchmarks;
+
+namespace XlsBenchmarks;
 
 use ReflectionClass;
 use ReflectionMethod;
@@ -18,7 +8,7 @@ use ReflectionMethod;
 /**
  * An Interface to create package specific tests
  *
- * @package csv-benchmarks
+ * @package xls-benchmarks
  * @since  0.1.0
  */
 class AbstractDriver
@@ -38,7 +28,7 @@ class AbstractDriver
     protected $nbcells = 3;
 
     /**
-     * Row count per CSV document
+     * Row count per XLS document
      *
      * @var integer
      */
@@ -52,14 +42,14 @@ class AbstractDriver
     protected $iteration = 3;
 
     /**
-     * The Path to the CSV document to read from/write to
+     * The Path to the XLS document to read from/write to
      *
      * @var string
      */
     protected $path;
 
     /**
-     * Set the cells number per row to be inserted when writing to the CSV document
+     * Set the cells number per row to be inserted when writing to the XLS document
      *
      * @param int $nbcells
      */
@@ -79,7 +69,7 @@ class AbstractDriver
     }
 
     /**
-     * Set the rows count to be inserted when writing to the CSV document
+     * Set the rows count to be inserted when writing to the XLS document
      *
      * @param int $nbrows
      */
@@ -89,7 +79,7 @@ class AbstractDriver
     }
 
     /**
-     * Get row count per CSV document
+     * Get row count per XLS document
      *
      * @return int
      */
@@ -99,7 +89,7 @@ class AbstractDriver
     }
 
     /**
-     * Set CSV document path to read from or write to
+     * Set XLS document path to read from or write to
      *
      * @param string $path
      */
@@ -109,7 +99,7 @@ class AbstractDriver
     }
 
     /**
-     * return current CSV document path
+     * return current XLS document path
      *
      * @return string
      */
@@ -119,7 +109,7 @@ class AbstractDriver
     }
 
     /**
-     * Set the rows count to be inserted when writing to the CSV document
+     * Set the rows count to be inserted when writing to the XLS document
      *
      * @param int $iteration
      */
@@ -148,7 +138,7 @@ class AbstractDriver
 
     /**
      * Using PHP 5.5 generator to ease memory usage
-     * @package csv-benchmarks
+     * @package xls-benchmarks
      * @since  0.1.0
      *
      * @param int $nb_rows
@@ -177,13 +167,12 @@ class AbstractDriver
         $reflection = new ReflectionClass($this);
         $methods = array_filter($reflection->getMethods(ReflectionMethod::IS_PUBLIC), function ($method) {
             $str = $method->name;
-            return strpos(strrev($str), 'tseT') === 0 && ! in_array($str, ['writerTest', 'readerTest']);
+            return strpos(strrev($str), 'tseT') === 0 && ! in_array($str, ['writerTest']);
         });
 
         array_unshift(
             $methods,
-            new ReflectionMethod($this, 'writerTest'),
-            new ReflectionMethod($this, 'readerTest')
+            new ReflectionMethod($this, 'writerTest')
         );
 
         foreach ($methods as $method) {
@@ -193,6 +182,7 @@ class AbstractDriver
                 $duration = microtime(true) - $start;
                 $results[$method->name][] = [
                     'duration' => round($duration * 1000, 2),
+                    'memory' => round(memory_get_peak_usage(true) / 1024 / 1024, 2),
                 ];
             }
         }
