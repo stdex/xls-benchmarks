@@ -58,7 +58,7 @@ class PackageCollection implements Countable, IteratorAggregate
         });
 
         foreach ($packages as $package) {
-            $this->add($package['name'], $package['version'], $package['homepage']);
+            $this->add($package['name'], $package['version'], $package['homepage'] ?? '');
         }
     }
 
