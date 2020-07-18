@@ -1,6 +1,6 @@
 # xls-benchmarks
 
-Current results: https://travis-ci.com/github/stdex/xls-benchmarks/builds/175971157  
+Current results (write): https://travis-ci.com/github/stdex/xls-benchmarks/builds/175971157  
 
 ```
 Runtime: 7.4.8
