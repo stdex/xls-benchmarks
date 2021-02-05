@@ -1,19 +1,19 @@
 {
-    "minimum-stability": "dev",
-    "name" : "stdex/xls-benchmarks",
-    "description" : "benchmark to compare famous PHP XLS libraries",
+    "minimum-stability": "RC",
+    "name": "stdex/xls-benchmarks",
+    "description": "benchmark to compare famous PHP XLS libraries",
     "keywords": ["xls", "benchmark"],
-    "license" : "MIT",
-    "homepage" : "https://github.com/stdex/xls-benchmarks",
+    "license": "MIT",
+    "homepage": "https://github.com/stdex/xls-benchmarks",
     "autoload": {
-        "psr-4" : {
-            "XlsBenchmarks\\" : "src"
+        "psr-4": {
+            "XlsBenchmarks\\": "src"
         }
     },
     "require": {
         "box/spout": "^2.7",
         "phpoffice/phpspreadsheet": "dev-master",
-        "pear/spreadsheet_excel_writer": "dev-master",
+        "pear/spreadsheet_excel_writer": "^0.9.7",
         "league/climate": "^3.5"
     }
 }
