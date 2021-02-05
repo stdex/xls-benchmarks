@@ -4,6 +4,7 @@ sudo: false
 
 php:
   - 7.4
+  - 8.0
 
 matrix:
   fast_finish: true
@@ -20,21 +21,6 @@ install:
   - travis_retry composer install --prefer-dist
 
 script:
-  - php bin/benchmark --iteration=3 --rows=10000 --cells=5 --driver=Spout
-  - php bin/benchmark --iteration=3 --rows=10000 --cells=5 --driver=SpreadsheetExcelWriter
-  - php bin/benchmark --iteration=3 --rows=10000 --cells=5 --driver=Phpspreadsheet
-  - php bin/benchmark --iteration=3 --rows=20000 --cells=5 --driver=Spout
-  - php bin/benchmark --iteration=3 --rows=20000 --cells=5 --driver=SpreadsheetExcelWriter
-  - php bin/benchmark --iteration=3 --rows=20000 --cells=5 --driver=Phpspreadsheet
-  - php bin/benchmark --iteration=3 --rows=30000 --cells=5 --driver=Spout
-  - php bin/benchmark --iteration=3 --rows=30000 --cells=5 --driver=SpreadsheetExcelWriter
-  - php bin/benchmark --iteration=3 --rows=30000 --cells=5 --driver=Phpspreadsheet
-  - php bin/benchmark --iteration=3 --rows=40000 --cells=5 --driver=Spout
-  - php bin/benchmark --iteration=3 --rows=40000 --cells=5 --driver=SpreadsheetExcelWriter
-  - php bin/benchmark --iteration=3 --rows=40000 --cells=5 --driver=Phpspreadsheet
-  - php bin/benchmark --iteration=3 --rows=50000 --cells=5 --driver=Spout
-  - php bin/benchmark --iteration=3 --rows=50000 --cells=5 --driver=SpreadsheetExcelWriter
-  - php bin/benchmark --iteration=3 --rows=50000 --cells=5 --driver=Phpspreadsheet
   - php bin/benchmark --iteration=3 --rows=65534 --cells=5 --driver=Spout
   - php bin/benchmark --iteration=3 --rows=65534 --cells=5 --driver=SpreadsheetExcelWriter
   - php bin/benchmark --iteration=3 --rows=65534 --cells=5 --driver=Phpspreadsheet
