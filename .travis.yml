@@ -17,6 +17,7 @@ cache:
     - $HOME/.composer/cache
 
 before_install:
+  - phpenv config-rm xdebug.ini
   - phpenv config-add travis.php.ini
   - composer self-update
   - composer validate
