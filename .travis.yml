@@ -1,10 +1,13 @@
-language: php
-
+os: linux
+dist: focal
+arch: amd64
 sudo: false
 
+language: php
+
 php:
-  - 7.4
-  - 8.0
+  - '7.4'
+  - '8.0'
 
 matrix:
   fast_finish: true
@@ -14,6 +17,7 @@ cache:
     - $HOME/.composer/cache
 
 before_install:
+  - phpenv config-add travis.php.ini
   - composer self-update
   - composer validate
 
@@ -21,6 +25,6 @@ install:
   - travis_retry composer install --prefer-dist
 
 script:
-  - php bin/benchmark --iteration=3 --rows=65534 --cells=5 --driver=Spout
-  - php bin/benchmark --iteration=3 --rows=65534 --cells=5 --driver=SpreadsheetExcelWriter
-  - php bin/benchmark --iteration=3 --rows=65534 --cells=5 --driver=Phpspreadsheet
+  - php bin/benchmark --iteration=5 --rows=65534 --cells=5 --driver=Spout
+  - php bin/benchmark --iteration=5 --rows=65534 --cells=5 --driver=SpreadsheetExcelWriter
+  - php bin/benchmark --iteration=5 --rows=65534 --cells=5 --driver=Phpspreadsheet
