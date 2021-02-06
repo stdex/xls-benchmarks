@@ -26,6 +26,6 @@ install:
   - travis_retry composer install --prefer-dist
 
 script:
-  - php bin/benchmark --iteration=5 --rows=65534 --cells=5 --driver=Spout
-  - php bin/benchmark --iteration=5 --rows=65534 --cells=5 --driver=SpreadsheetExcelWriter
-  - php bin/benchmark --iteration=5 --rows=65534 --cells=5 --driver=Phpspreadsheet
+  - php bin/benchmark --iteration=10 --rows=65534 --cells=5 --driver=Spout
+  - php bin/benchmark --iteration=10 --rows=65534 --cells=5 --driver=SpreadsheetExcelWriter
+  - php bin/benchmark --iteration=10 --rows=65534 --cells=5 --driver=Phpspreadsheet
