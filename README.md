@@ -1,7 +1,5 @@
 # xls-benchmarks
 
-Current results (write): https://travis-ci.com/github/stdex/xls-benchmarks/
-
 ```
 php bin/benchmark --iteration=5 --rows=65534 --cells=5 --driver=Spout
 php bin/benchmark --iteration=5 --rows=65534 --cells=5 --driver=SpreadsheetExcelWriter
