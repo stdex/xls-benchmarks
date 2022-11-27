@@ -1,5 +1,10 @@
 # xls-benchmarks
 
+Libraries for test:
+- [box/spout](https://github.com/box/spout)
+- [pear/spreadsheet_excel_writer](https://github.com/pear/Spreadsheet_Excel_Writer)
+- [phpoffice/phpspreadsheet](https://github.com/PHPOffice/PhpSpreadsheet)
+
 ```
 php bin/benchmark --iteration=5 --rows=65534 --cells=5 --driver=Spout
 php bin/benchmark --iteration=5 --rows=65534 --cells=5 --driver=SpreadsheetExcelWriter
